@@ -1,0 +1,73 @@
+<TextInput
+    style={styles.inputBox}
+    onChangeText={text => {
+        this.setState({
+            text: text,
+            isSearchPressed: false,
+            word: "Loading...",
+            lexicalCategory: '',
+            examples: [],
+            defination: ""
+        });
+    }}
+    value-{this.state.text}
+/>
+<TouchableOpacity
+    style={styles.searchButton}
+    onPress={() => {
+        this.setState({ isSearchPressed: true});
+        this.getWord(this.state.text)
+    }}>
+getWord=(word)=>{
+    var searchKeyword=word.toLowerCase()
+    var url= "https://rupinwhitehatjr.github.io/dictionary/%22+searchKeyword+%22"+searchKeyword+".json"
+    return fetch(url)
+    .then((data)=>{
+        if(data.status===200)
+        {
+            return data.json()
+        }
+        else
+        {
+            return null
+        }
+    })
+}
+.then((response)=>{
+    var reponseObject = response
+    if(reponseObject)
+    {
+        var wordData = reponseObject.definitions[0]
+        var definition=wordData.wordtype
+        this.setState({
+            "word": this.state.text,
+            "definition": definition,
+            "lexicalCategory": lexicalCategory
+        })
+    }
+    else
+    {
+        this.setState({
+            "word": this.state.text,
+            "definition": "
+        })
+    }
+})
+render(){
+    <View style={styles.detailsContainer}>
+        <Text style={styles.detailsTitle}>
+            Word:{""}
+        </Text>
+        <Text style={{fontSize: 18}}>
+            {this.state.word}
+        </Text>
+    </View>
+    <View style={{flexDirection:'row',flexWrap: 'wrap'}}>
+        <Text style={styles.detailsTitle}>
+            definition: {" "}
+        </Text>
+        <Text style={{fontSize:18}}>
+            {this.state.definition}
+        </Text>
+    </View>
+}
